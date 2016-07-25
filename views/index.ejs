@@ -1,0 +1,141 @@
+<!doctype html>
+<html>
+
+<head>
+    <title>Socket.IO chat</title>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+
+    <!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+
+
+
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font: 13px Helvetica, Arial;
+            background-image: url('http://a5.mzstatic.com/us/r30/Purple5/v4/f2/2b/d0/f22bd06f-7a14-e2f9-f455-371f3a074518/screen1136x1136.jpeg');
+        }
+
+        form {
+            background: transparent;
+            padding: 3px;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            color: #fff;
+        }
+
+        .form-horizontal .control-label {
+          /* text-align:right; */ text-align:left;
+          padding-left: 30px;
+        }
+
+        form input {
+            border: 0;
+            padding: 10px;
+            width: 90%;
+            margin-right: .5%;
+            align-items: left;
+        }
+
+        form button {
+            width: 9%;
+            background: rgb(130, 224, 255);
+            border: none;
+            padding: 10px;
+        }
+
+        #messages {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        #messages li {
+            padding: 5px 10px;
+        }
+
+        #messages li:nth-child(odd) {
+            /*background: #eee;*/
+            color: #fff;
+            margin-left: 100px;
+            margin-top: 20px
+        }
+        #messages li:nth-child(even) {
+            /*background: #eee;*/
+            color: #16C9C9;
+            margin-left: 100px;
+            margin-top: 20px
+        }
+    </style>
+</head>
+
+<body>
+    <ul id="messages"></ul>
+    <!-- <form action="">
+        <input id="n" autocomplete="off" />
+        <input id="m" autocomplete="off" />
+        <button>Send</button>
+    </form> -->
+
+    <form class="form-horizontal">
+  <div class="form-group">
+    <label for="name" class="col-sm-1 control-label">Name</label>
+    <div class="col-sm-3">
+      <input type="text" class="form-control" id="name" placeholder="Name">
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="m" class="col-sm-1 control-label">Message</label>
+    <div class="col-sm-9">
+      <textarea class="form-control" rows="3" id="m" placeholder="Message"></textarea>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <div class="col-sm-offset-1 col-sm-10">
+      <button type="submit" class="btn btn-info">Send</button>
+    </div>
+  </div>
+</form>
+
+    <script>
+        var socket = io()
+        var userId
+
+        socket.on('connect', () => {
+            console.log('connected:', socket.id)
+
+        })
+
+        $('form').submit(function(){
+          socket.emit('chat message', "<strong>" + $('#name').val() + "</strong><br />" + $('#m').val())
+
+          $('#m').val('')
+          $('#name').val('')
+          return false
+        })
+
+      socket.on('chat message', function(msg){
+        if($('#messages li').length > 6) {
+          $('#messages').empty()
+        }
+        $('#messages').append($('<li>').html(msg))
+      })
+
+    </script>
+</body>
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+</html>
